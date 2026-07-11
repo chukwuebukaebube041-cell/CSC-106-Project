@@ -1,0 +1,141 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Planner</title>
+<body>
+<nav>
+<div class="intro">COS 106 Project</div>
+<ul>
+<li><a href="homepage.html">Home</a></li>
+<li><a href="aboutme.html">About Me</a></li>
+<li><a href="planner.html">Planner</a></li>
+<li><a href="projects.html">Projects</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+<div class="container">
+<h2>Study Planner</h2>
+<div class="input-area">
+<input type="text" id="taskText" placeholder="Enter task">
+<button onclick="addTask()">Add</button>
+</div>
+<div id="taskList"></div>
+</div>
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+function saveTasks(){
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function addTask(){
+    const input=document.getElementById("taskText");
+    if(input.value.trim()==""){
+        alert("Enter a task");
+        return;
+    }
+    tasks.push({
+        id:Date.now(),
+        text:input.value
+    });
+    input.value="";
+    saveTasks();
+    displayTasks();
+}
+function deleteTask(id){
+    tasks=tasks.filter(task=>task.id!==id);
+    saveTasks();
+    displayTasks();
+}
+function displayTasks(){
+    const taskList=document.getElementById("taskList");
+    taskList.innerHTML="";
+    tasks.forEach(task=>{
+        taskList.innerHTML+=`
+        <div class="task">
+            <span>${task.text}</span>
+            <button onclick="deleteTask(${task.id})">Delete</button>
+        </div>
+        `;
+    });
+}
+displayTasks();
+</script>
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+}
+
+nav{
+    background:#1e2a38;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-radius:20px;
+    width:90%;
+    margin:20px auto;
+}
+
+nav .intro{
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    gap:20px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+}
+
+.container{
+    width:90%;
+    max-width:650px;
+    background:white;
+    margin:30px auto;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+.input-area{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+}
+
+button{
+    padding:10px 20px;
+    background:#2980b9;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.task{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+    padding:10px;
+    background:#eee;
+    border-radius:5px;
+}
+
+.task button{
+    background:#e74c3c;
+}
+</style>
+</body>
